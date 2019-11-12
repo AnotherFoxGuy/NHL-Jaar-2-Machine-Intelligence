@@ -1,22 +1,11 @@
-cmake_minimum_required(VERSION 3.15)
 
+project(Concurrency)
 
-include(FeatureSummary)
-include(../pmm.cmake)
-pmm(CMakeCM ROLLING)
-include(cotire)
+add_executable(Concur_Week1 Week1.cpp)
+add_executable(Concur_Race Race_condition/Race_condition.cpp)
 
-project(ConcurrencyCPP)
-set(CMAKE_CXX_STANDARD 17)
-find_package(Threads)
+target_link_libraries(Concur_Week1 Threads::Threads)
+target_link_libraries(Concur_Race Threads::Threads)
 
-add_executable(Week1 Week1.cpp)
-add_executable(Race Race_condition/Race_condition.cpp)
-
-target_link_libraries(Week1 Threads::Threads)
-target_link_libraries(Race Threads::Threads)
-
-cotire(Week1)
-cotire(Race)
-
-feature_summary(WHAT ALL)
+cotire(Concur_Week1)
+cotire(Concur_Race)
