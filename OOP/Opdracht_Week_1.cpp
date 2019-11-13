@@ -13,13 +13,10 @@ int main() {
 
     sort(names.begin(), names.end(), compare);
 
-    for (int i = 0; i < names.capacity(); ++i) {
+    for (int i = 0; i < names.size(); ++i) {
         cout << names[i] << endl;
     }
 }
-
-
-
 
 bool compare(std::string a, std::string b) {
     return a < b;

@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 find_package(Threads)
 
-
+add_subdirectory(Algoritmiek)
 add_subdirectory(Concurrency)
 add_subdirectory(OOP)
 
