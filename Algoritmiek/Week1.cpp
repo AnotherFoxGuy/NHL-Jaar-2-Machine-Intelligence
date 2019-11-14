@@ -13,9 +13,9 @@ vector<string> MergeSort(vector<string> list);
 int main() {
     vector<string> namessort = MergeSort(getNames());
 
-    for (int i = 0; i < namessort.size(); ++i) {
+    for (auto & i : namessort) {
         // cout << names[i] << endl;
-        printf("Name: %s\n", namessort[i].c_str());
+        printf("Name: %s\n", i.c_str());
     }
 }
 
@@ -39,13 +39,11 @@ vector<string> Merge(vector<string> a, vector<string> b) {
 
     if (ai < bi) {
         li.emplace_back(ai);
-        a.erase(std::remove(a.begin(), a.end(), ai), a.end());
+        a.erase(a.begin());
     } else {
         li.emplace_back(bi);
-        b.erase(std::remove(b.begin(), b.end(), bi), b.end());
+        b.erase(b.begin());
     }
-
-    //li.emplace_back();
 
     auto kaas = Merge(a, b);
     li.insert(li.end(), kaas.begin(), kaas.end());

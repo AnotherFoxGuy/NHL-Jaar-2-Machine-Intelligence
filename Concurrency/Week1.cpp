@@ -2,6 +2,7 @@
 #include <thread>
 #include <vector>
 #include <mutex>
+#include <future>
 
 using namespace std;
 
@@ -32,14 +33,26 @@ void op2() {
     }
 }
 
+void keep_promise_too(promise<int>&& promise_obj){
+    promise_obj.set_value(rand());
+}
 
-void op3() {
+void op6() {
+//Alternatively with a promise object:​
+    promise<int> promise_obj;
 
+    future<int> result = promise_obj.get_future();
+    thread t(keep_promise_too, std::move(promise_obj));
+
+    result.wait();
+    printf("%d\n", result.get());
+
+    t.join();
 }
 
 
 int main() {
-    op2();
+    op6();
     cout << "Hello, World! \n" << endl;
     return 0;
 }
