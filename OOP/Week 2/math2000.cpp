@@ -24,9 +24,9 @@ int math2000::min(int i, int y) {
 }
 
 int math2000::times(int i, int y) {
-    return i - y;
+    return i * y;
 }
 
 int math2000::div(int i, int y) {
-    return i - y;
+    return i / y;
 }
