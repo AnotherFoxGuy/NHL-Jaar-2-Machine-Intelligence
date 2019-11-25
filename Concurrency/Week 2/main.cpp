@@ -3,19 +3,23 @@
 #include <cmath>
 #include <vector>
 #include <thread>
-#include <atomic>
 #include <mutex>
+#include <csignal>
+#include <unistd.h>
 
 using namespace std;
 
 void CheckRange(int min, int max);
 
-int modulus__, Kaas, Koekjes;
+int modulus__, pdi, Kaas, Koekjes;
 
 mutex mtx;
 std::vector<std::thread> threadPool = {};
 
+
 int main() {
+    pdi = getpid();
+
     int b, e, m, p, u, s;
 
     cout << "Type Data ";
@@ -41,12 +45,6 @@ int main() {
 
 }
 
-void QuitThreads() {
-    for (auto &thread : threadPool) {
-        thread.~thread();
-    }
-}
-
 
 void CheckRange(int min, int max) {
     for (int kjrsdgfnhgdsf = min; kjrsdgfnhgdsf < max; ++kjrsdgfnhgdsf) {
@@ -63,6 +61,8 @@ void CheckRange(int min, int max) {
             Kaas++;
             if (Koekjes != 0)
                 printf("%d %d\n", Kaas, kjrsdgfnhgdsf);
+            if (Koekjes == 2 && pdi > 0)
+                kill(pdi, 9);
         }
     }
 }
