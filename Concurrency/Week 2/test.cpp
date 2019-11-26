@@ -1,24 +1,30 @@
+#define CATCH_CONFIG_MAIN
+
+#include <catch2/catch.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
+
+#include "tbb/task_group.h"
 
 using namespace std;
 
 vector<string> getNames();
 
 vector<string> MergeSort(vector<string> list);
-
-
-int main() {
-    vector<string> namessort = MergeSort(getNames());
+vector<string> MergeSortMT(vector<string> list);
 
 
 
-    for (auto & i : namessort) {
-        // cout << names[i] << endl;
-        printf("Name: %s\n", i.c_str());
-    }
+TEST_CASE("MergeSort", "[MergeSort]") {
+
+    BENCHMARK("No TBB") {
+        return MergeSort(getNames());
+    };
+    BENCHMARK("TBB") {
+        return MergeSortMT(getNames());
+    };
 }
 
 
@@ -60,6 +66,29 @@ vector<string> Merge(vector<string> a, vector<string> b) {
 vector<string> MergeSort(vector<string> list) {
     return list.size() <= 1 ? list : Merge(MergeSort(vector<string>(list.begin(), list.begin() + (list.size() / 2))),
                                            MergeSort(vector<string>(list.begin() + (list.size() / 2), list.end())));
+}
+
+/// <summary>
+/// Sorts a list of integers by using merge
+/// </summary>
+/// <param name="list">unsorted list</param>
+/// <returns>sorted list</returns>
+vector<string> MergeSortMT(vector<string> list) {
+    vector<string> left(list.begin(), list.begin() + list.size() / 2);
+    vector<string> right(list.begin() + list.size() / 2, list.end());
+
+    if (list.size() <= 1) {
+        return list;
+    } else {
+        vector<string> l, r;
+
+        tbb::task_group g;
+        g.run([&] { l = MergeSortMT(left); }); // spawn a task
+        g.run([&] { r = MergeSortMT(right); }); // spawn another task
+        g.wait();                // wait for both tasks to complete
+
+        return Merge(l, r);
+    }
 }
 
 
