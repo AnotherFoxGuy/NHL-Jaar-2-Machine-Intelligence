@@ -7,24 +7,31 @@
 #include <algorithm>
 
 #include "tbb/task_group.h"
+#include "ThreadPool.h"
 
 using namespace std;
 
 vector<string> getNames();
 
 vector<string> MergeSort(vector<string> list);
-vector<string> MergeSortMT(vector<string> list);
+vector<string> MergeSortTP(vector<string> list);
+vector<string> MergeSortTBB(vector<string> list);
 
-
+int threadCount = std::thread::hardware_concurrency() * 2;
+ThreadPool pool(threadCount);
 
 TEST_CASE("MergeSort", "[MergeSort]") {
 
-    BENCHMARK("No TBB") {
-        return MergeSort(getNames());
-    };
+
+    BENCHMARK("Plain") {
+                           return MergeSort(getNames());
+                       };
     BENCHMARK("TBB") {
-        return MergeSortMT(getNames());
-    };
+                         return MergeSortTBB(getNames());
+                     };
+    BENCHMARK("ThreadPool") {
+                                return MergeSortTP(getNames());
+                            };
 }
 
 
@@ -73,7 +80,7 @@ vector<string> MergeSort(vector<string> list) {
 /// </summary>
 /// <param name="list">unsorted list</param>
 /// <returns>sorted list</returns>
-vector<string> MergeSortMT(vector<string> list) {
+vector<string> MergeSortTBB(vector<string> list) {
     vector<string> left(list.begin(), list.begin() + list.size() / 2);
     vector<string> right(list.begin() + list.size() / 2, list.end());
 
@@ -83,9 +90,26 @@ vector<string> MergeSortMT(vector<string> list) {
         vector<string> l, r;
 
         tbb::task_group g;
-        g.run([&] { l = MergeSortMT(left); }); // spawn a task
-        g.run([&] { r = MergeSortMT(right); }); // spawn another task
+        g.run([&] { l = MergeSortTBB(left); }); // spawn a task
+        g.run([&] { r = MergeSortTBB(right); }); // spawn another task
         g.wait();                // wait for both tasks to complete
+
+        return Merge(l, r);
+    }
+}
+
+vector<string> MergeSortTP(vector<string> list) {
+    vector<string> left(list.begin(), list.begin() + list.size() / 2);
+    vector<string> right(list.begin() + list.size() / 2, list.end());
+
+    if (list.size() <= 1) {
+        return list;
+    } else {
+        vector<string> l, r;
+
+        std::future<void> kaas = pool.enqueue(([&] { l = MergeSortTP(left); }));
+        r = MergeSortTP(right);
+        kaas.wait();
 
         return Merge(l, r);
     }

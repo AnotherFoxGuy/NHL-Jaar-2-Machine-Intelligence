@@ -1,4 +1,4 @@
-include_directories(.)
+include_directories(.;${CMAKE_SOURCE_DIR}/Threadpool)
 
 add_executable(Concur_Week2 main.cpp)
 target_link_libraries(Concur_Week2 Threads::Threads CONAN_PKG::tbb)
