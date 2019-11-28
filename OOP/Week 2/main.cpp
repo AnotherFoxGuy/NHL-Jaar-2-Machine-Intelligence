@@ -13,16 +13,16 @@ int main() {
 
     switch (c) {
         case '+':
-            printf("%d + %d = %d", x, y, math2000::plus(x, y));
+            printf("%d + %d = %d", x, y, Math2000::plus(x, y));
             break;
         case '-':
-            printf("%d - %d = %d", x, y, math2000::min(x, y));
+            printf("%d - %d = %d", x, y, Math2000::min(x, y));
             break;
         case '*':
-            printf("%d * %d = %d", x, y, math2000::times(x, y));
+            printf("%d * %d = %d", x, y, Math2000::times(x, y));
             break;
         case '/':
-            printf("%d / %d = %d", x, y, math2000::div(x, y));
+            printf("%d / %d = %d", x, y, Math2000::div(x, y));
             break;
         default:
             cout << "Unrec: " << c << endl;

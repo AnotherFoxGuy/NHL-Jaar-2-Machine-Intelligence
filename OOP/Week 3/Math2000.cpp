@@ -1,5 +1,5 @@
 #include <numeric>
-#include "math2000.h"
+#include "Math2000.h"
 
 using namespace std;
 
