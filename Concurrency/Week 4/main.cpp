@@ -33,7 +33,7 @@ int main() {
     auto cc = new GIS_TRI();
 
 
-    auto res = cc->CalculateHeightTrisConcur(dat);
+    auto res = cc->CalculateHeightTrisConcurTP(dat);
 
     cout << "imp" << endl;
 

@@ -9,7 +9,7 @@
 using namespace std;
 
 TEST_CASE("CalculateHeightTris", "[GIS_TRI]") {
-    int v_size = 250;
+    int v_size = 1000;
     vector<vector<int>> dat(v_size, vector<int> (v_size, 0));
 
     for (int y = 0; y < v_size; y++)
@@ -24,5 +24,9 @@ TEST_CASE("CalculateHeightTris", "[GIS_TRI]") {
                        };
     BENCHMARK("TBB") {
                          return cc->CalculateHeightTrisConcur(dat);
+                     };
+
+    BENCHMARK("ThreadPool") {
+                         return cc->CalculateHeightTrisConcurTP(dat);
                      };
 }
